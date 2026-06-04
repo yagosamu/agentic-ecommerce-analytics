@@ -7,7 +7,7 @@ The system uses two complementary data stores:
 - **Ledger:** Postgres for exact business metrics such as revenue, orders, products, payment methods, and customer segments.
 - **Memory:** Qdrant for semantic search over customer reviews, complaints, sentiment, and recurring experience themes.
 
-I built this as a portfolio version of a practical study project. The public repository keeps my implementation, notes, and technical decisions, while course prompts and proprietary learning material are intentionally excluded.
+I built this as a portfolio version of a practical study project. The public repository keeps my implementation, notes, and technical decisions.
 
 ## What It Does
 
@@ -107,7 +107,3 @@ If Docker Compose creates a different Postgres container name, override it:
 ```bash
 set SHOPAGENT_POSTGRES_CONTAINER=infra-postgres-1
 ```
-
-## Notes
-
-This repository does not include course prompts, private assistant configuration, local secrets, generated datasets, virtual environments, or proprietary materials.
