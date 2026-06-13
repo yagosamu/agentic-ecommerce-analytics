@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agentic Ecommerce Analytics</title>
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --ink: #101828;
+      --muted: #667085;
+      --line: #d7dee8;
+      --panel: #ffffff;
+      --sidebar: #111827;
+      --sidebar-soft: #1f2937;
+      --sidebar-line: #2f3a4a;
+      --blue: #2563eb;
+      --blue-soft: #eff6ff;
+      --teal: #0f766e;
+      --teal-soft: #ecfdf5;
+      --amber: #b45309;
+      --amber-soft: #fffbeb;
+      --red: #b42318;
+      --red-soft: #fef3f2;
+      --shadow: 0 18px 44px rgba(16, 24, 40, .08);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+    }
+
+    button,
+    textarea {
+      font: inherit;
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 268px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      background: var(--sidebar);
+      color: #f9fafb;
+      padding: 24px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 4px;
+      padding: 0 6px 18px;
+      border-bottom: 1px solid var(--sidebar-line);
+    }
+
+    .brand strong {
+      font-size: 15px;
+      letter-spacing: .01em;
+    }
+
+    .brand span {
+      color: #9ca3af;
+      font-size: 12px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav-item {
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      color: #cbd5e1;
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+
+    .nav-item.active {
+      background: rgba(37, 99, 235, .18);
+      border-color: rgba(147, 197, 253, .3);
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .agents {
+      display: grid;
+      gap: 10px;
+    }
+
+    .sidebar h2,
+    .side-card h2,
+    .panel h2 {
+      margin: 0;
+      font-size: 13px;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+    }
+
+    .agent-card {
+      border: 1px solid var(--sidebar-line);
+      background: var(--sidebar-soft);
+      border-radius: var(--radius);
+      padding: 12px;
+    }
+
+    .agent-card strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .agent-card span {
+      color: #aab4c4;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .main {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: 64px minmax(0, 1fr);
+    }
+
+    .topbar {
+      background: rgba(255, 255, 255, .86);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .crumb {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .health {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .health::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #16a34a;
+      box-shadow: 0 0 0 4px rgba(22, 163, 74, .12);
+    }
+
+    .workspace {
+      padding: 28px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #111827 0%, #1e3a8a 54%, #0f766e 100%);
+      border-radius: var(--radius);
+      color: #ffffff;
+      padding: 26px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      color: #bfdbfe;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.12;
+      letter-spacing: 0;
+      max-width: 720px;
+    }
+
+    .hero p {
+      margin: 10px 0 0;
+      color: #dbeafe;
+      line-height: 1.55;
+      max-width: 760px;
+      font-size: 14px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 1px 0 rgba(16, 24, 40, .03);
+    }
+
+    .metric label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--teal);
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+      gap: 16px;
+    }
+
+    .panel,
+    .side-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 0 rgba(16, 24, 40, .03);
+    }
+
+    .panel {
+      padding: 18px;
+      min-width: 0;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .pill.blue {
+      color: var(--blue);
+      background: var(--blue-soft);
+    }
+
+    .pill.teal {
+      color: var(--teal);
+      background: var(--teal-soft);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 11px 8px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .tag {
+      border-radius: 999px;
+      display: inline-block;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .tag.risk {
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .tag.good {
+      background: var(--teal-soft);
+      color: var(--teal);
+    }
+
+    .review {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #fbfcfe;
+    }
+
+    .review p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .review span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .recommendation {
+      margin-top: 16px;
+    }
+
+    .recommendation p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .side {
+      display: grid;
+      gap: 16px;
+    }
+
+    .side-card {
+      padding: 18px;
+    }
+
+    .prompt {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      min-height: 116px;
+      resize: vertical;
+      width: 100%;
+      margin: 14px 0 10px;
+      padding: 12px;
+      color: var(--ink);
+      line-height: 1.45;
+      outline: none;
+    }
+
+    .prompt:focus {
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
+    }
+
+    .button {
+      width: 100%;
+      border: 0;
+      border-radius: var(--radius);
+      background: var(--blue);
+      color: #ffffff;
+      padding: 11px 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .step-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 800;
+      background: var(--teal-soft);
+      color: var(--teal);
+    }
+
+    .step.active .step-dot {
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .step strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+
+    .step span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .insight-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .insight {
+      border-left: 3px solid var(--amber);
+      background: var(--amber-soft);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1180px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 880px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .topbar {
+        padding: 0 18px;
+      }
+
+      .workspace {
+        padding: 18px;
+      }
+
+      .metrics,
+      .grid,
+      .side {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <strong>Agentic Ecommerce Analytics</strong>
+        <span>Revenue, memory, and executive synthesis</span>
+      </div>
+
+      <nav class="nav">
+        <div class="nav-item active">Executive Overview</div>
+        <div class="nav-item">Ledger Metrics</div>
+        <div class="nav-item">Customer Memory</div>
+        <div class="nav-item">Crew Reports</div>
+      </nav>
+
+      <div>
+        <h2>Agent Crew</h2>
+        <div class="agents">
+          <div class="agent-card">
+            <strong>Revenue Analyst</strong>
+            <span>Queries the ecommerce ledger for verified financial and operational metrics.</span>
+          </div>
+          <div class="agent-card">
+            <strong>Customer Voice Researcher</strong>
+            <span>Searches review memory for complaint themes, sentiment, and evidence.</span>
+          </div>
+          <div class="agent-card">
+            <strong>Executive Advisor</strong>
+            <span>Connects business performance with customer experience signals.</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="crumb">Workspace / Customer Intelligence</div>
+        <div class="health">Local analytics stack ready</div>
+      </header>
+
+      <section class="workspace">
+        <div>
+          <section class="hero">
+            <div class="eyebrow">Multi-Agent Analysis</div>
+            <h1>Customer satisfaction and revenue impact across ecommerce regions</h1>
+            <p>Specialized agents combine exact ledger metrics with semantic customer memory to produce evidence-backed recommendations.</p>
+          </section>
+
+          <section class="metrics">
+            <div class="metric">
+              <label>Total Revenue</label>
+              <strong>R$ 2.59M</strong>
+              <span>Verified by SQL ledger</span>
+            </div>
+            <div class="metric">
+              <label>Orders</label>
+              <strong>5,000</strong>
+              <span>Across all regions</span>
+            </div>
+            <div class="metric">
+              <label>Review Memory</label>
+              <strong>703</strong>
+              <span>Indexed comments</span>
+            </div>
+            <div class="metric">
+              <label>Cancellation Rate</label>
+              <strong>9.6%</strong>
+              <span>Operational risk signal</span>
+            </div>
+          </section>
+
+          <section class="grid">
+            <div class="panel">
+              <div class="panel-head">
+                <h2>Regional Ledger Snapshot</h2>
+                <span class="pill blue">Postgres</span>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Region</th>
+                    <th>Orders</th>
+                    <th>Revenue</th>
+                    <th>Signal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>MG</td>
+                    <td>799</td>
+                    <td>R$ 421k</td>
+                    <td><span class="tag risk">Delivery friction</span></td>
+                  </tr>
+                  <tr>
+                    <td>SC</td>
+                    <td>677</td>
+                    <td>R$ 352k</td>
+                    <td><span class="tag good">Stable</span></td>
+                  </tr>
+                  <tr>
+                    <td>RS</td>
+                    <td>652</td>
+                    <td>R$ 337k</td>
+                    <td><span class="tag risk">Support delays</span></td>
+                  </tr>
+                  <tr>
+                    <td>PR</td>
+                    <td>616</td>
+                    <td>R$ 323k</td>
+                    <td><span class="tag good">Value strength</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <h2>Customer Memory Signals</h2>
+                <span class="pill teal">Qdrant</span>
+              </div>
+              <div class="review">
+                <p>Delivery was delayed and tracking stayed stale for several days.</p>
+                <span>Theme: logistics / sentiment: negative</span>
+              </div>
+              <div class="review">
+                <p>The product exceeded expectations for the price paid.</p>
+                <span>Theme: value perception / sentiment: positive</span>
+              </div>
+              <div class="review">
+                <p>Support took too long to respond to an exchange request.</p>
+                <span>Theme: support / sentiment: negative</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel recommendation">
+            <div class="panel-head">
+              <h2>Executive Recommendation Draft</h2>
+              <span class="pill blue">Crew Output</span>
+            </div>
+            <p>Prioritize delivery transparency in high-revenue regions, separate product-quality issues from logistics issues, and monitor support response time as a leading indicator for negative reviews.</p>
+          </section>
+        </div>
+
+        <aside class="side">
+          <section class="side-card">
+            <h2>Ask The Crew</h2>
+            <textarea class="prompt">Analyze customer satisfaction by region, including revenue impact, complaint themes, and an action plan.</textarea>
+            <button class="button" type="button">Generate Executive Report</button>
+          </section>
+
+          <section class="side-card">
+            <h2>Execution Trace</h2>
+            <div class="timeline">
+              <div class="step">
+                <div class="step-dot">1</div>
+                <div>
+                  <strong>Revenue Analyst</strong>
+                  <span>Fetched regional revenue, order volume, and cancellation metrics.</span>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-dot">2</div>
+                <div>
+                  <strong>Customer Voice Researcher</strong>
+                  <span>Retrieved delivery, support, and value perception evidence from memory.</span>
+                </div>
+              </div>
+              <div class="step active">
+                <div class="step-dot">3</div>
+                <div>
+                  <strong>Executive Advisor</strong>
+                  <span>Synthesizing financial impact, customer signals, and next actions.</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="side-card">
+            <h2>Priority Signals</h2>
+            <div class="insight-list">
+              <div class="insight">High-revenue states also show the strongest logistics friction.</div>
+              <div class="insight">Support latency appears more damaging than product quality in negative reviews.</div>
+              <div class="insight">Value perception is a positive retention lever in stable regions.</div>
+            </div>
+          </section>
+        </aside>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
