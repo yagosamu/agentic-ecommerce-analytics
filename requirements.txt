@@ -1,5 +1,7 @@
 anthropic
 chainlit
+crewai
+deepeval
 fastembed
 langchain
 langchain-anthropic
@@ -8,5 +10,6 @@ llama-index
 llama-index-embeddings-fastembed
 llama-index-vector-stores-qdrant
 python-dotenv
+pytest
 pydantic
 qdrant-client
