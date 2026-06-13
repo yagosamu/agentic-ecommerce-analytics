@@ -2,14 +2,28 @@
 
 An AI data engineering project that combines structured analytics, vector search, and an autonomous agent interface for ecommerce questions.
 
-![Agentic Ecommerce Analytics dashboard](docs/assets/dashboard-screenshot.png)
+## Architecture
+
+```text
++------------------+     +------------------+     +------------------+
+|  DATA GENERATION |     |   AI / LLM       |     |   INTERFACE      |
+|  ShadowTraffic   |     |   Claude         |     |   Chainlit       |
++--------+---------+     |   LlamaIndex     |     +--------+---------+
+         |               |   LangChain      |              |
+         v               |   CrewAI         |              v
++------------------+     +--------+---------+     +------------------+
+|  STORAGE         |              |               |   QUALITY        |
+|  Postgres        |              v               |   DeepEval       |
+|  (The Ledger)    |     +------------------+     |   LangFuse       |
+|  Qdrant          |<--->|   MCP Protocol   |     +------------------+
+|  (The Memory)    |     +------------------+
++------------------+
+```
 
 The system uses two complementary data stores:
 
 - **Ledger:** Postgres for exact business metrics such as revenue, orders, products, payment methods, and customer segments.
 - **Memory:** Qdrant for semantic search over customer reviews, complaints, sentiment, and recurring experience themes.
-
-I built this as a portfolio version of a practical study project. The public repository keeps my implementation, notes, and technical decisions.
 
 ## What It Does
 
@@ -25,21 +39,37 @@ I built this as a portfolio version of a practical study project. The public rep
 - Includes routing evaluation cases for SQL-only, semantic-only, and hybrid questions.
 - Provides a Chainlit chat interface for interactive exploration.
 
-## Architecture
+## Tech Stack Highlights
 
-```text
-Synthetic data
-ShadowTraffic
-    |
-    +--> Postgres ------------------+
-    |    "The Ledger"               |
-    |    exact metrics              |
-    |                               v
-    +--> JSONL reviews --> Qdrant --> ShopAgent / CrewAI --> Chainlit
-                         "Memory"          |
-                         semantic          v
-                         search       answers and reports
-```
+This project was designed to demonstrate practical AI Engineer skills beyond a basic chatbot.
+
+| Tool | How it is used | Why it matters |
+|------|----------------|----------------|
+| **LangChain / LangGraph** | Builds the ShopAgent, defines tool-calling behavior, manages agent execution, and keeps conversation state with thread-based memory. | Shows agent orchestration, tool use, state management, and production-oriented LLM application patterns. |
+| **Tool Selection** | The agent chooses between SQL analytics and semantic search based on the user question. Numeric questions go to the Ledger, qualitative questions go to Memory, and hybrid questions can use both. | Demonstrates routing logic, tool design, prompt/tool descriptions, and controlled access to external systems. |
+| **CrewAI** | Adds a multi-agent workflow with a Revenue Analyst, Customer Voice Researcher, and Executive Advisor. | Shows how to decompose complex AI tasks into specialized agents with clear responsibilities. |
+| **Docker Compose** | Runs Postgres, Qdrant, and ShadowTraffic locally as a reproducible data platform. | Demonstrates infrastructure literacy, local development environments, and service orchestration. |
+| **Postgres** | Stores structured ecommerce entities and supports exact business queries. | Covers relational modeling, SQL analytics, joins, aggregations, and deterministic data access. |
+| **Qdrant** | Stores embedded review comments for semantic search over customer feedback. | Demonstrates vector databases, retrieval, similarity search, and RAG-style architecture. |
+| **FastEmbed** | Generates local embeddings for customer reviews before indexing them in Qdrant. | Keeps semantic search reproducible without depending on an external embedding API. |
+| **Pydantic** | Defines typed ecommerce domain models and validation constraints. | Shows schema validation, data contracts, and safer structured outputs. |
+| **DeepEval / pytest** | Validates routing cases for SQL-only, memory-only, and hybrid questions. | Adds evaluation discipline to agent behavior instead of relying only on manual testing. |
+| **Chainlit** | Provides a chat interface for interacting with the analytics agent. | Demonstrates an end-user surface for LLM applications. |
+
+## AI Engineering Patterns
+
+- **Dual-store architecture:** Postgres handles exact metrics, while Qdrant handles meaning and customer sentiment.
+- **Tool-aware agents:** tools are intentionally described so the LLM can choose the correct data source.
+- **Hybrid retrieval:** complex questions can combine SQL results with semantic review evidence.
+- **Multi-agent decomposition:** CrewAI separates quantitative analysis, qualitative research, and executive synthesis.
+- **Evaluation-first mindset:** routing behavior is represented as test cases so the agent can be evaluated systematically.
+- **Local-first infrastructure:** Docker Compose makes the stack reproducible without relying on external managed services.
+
+## Demo
+
+A simple frontend mockup to visualize the agentic ecommerce analytics workflow.
+
+![Agentic Ecommerce Analytics dashboard](docs/assets/dashboard-screenshot.png)
 
 ## Project Structure
 
