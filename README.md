@@ -2,6 +2,8 @@
 
 An AI data engineering project that combines structured analytics, vector search, and an autonomous agent interface for ecommerce questions.
 
+![Agentic Ecommerce Analytics dashboard](docs/assets/dashboard-screenshot.png)
+
 The system uses two complementary data stores:
 
 - **Ledger:** Postgres for exact business metrics such as revenue, orders, products, payment methods, and customer segments.
