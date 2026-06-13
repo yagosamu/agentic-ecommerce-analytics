@@ -27,6 +27,26 @@ The ShopAgent exposes two tools:
 
 The agent decides which tool to use from the user's question. Numeric questions go to the Ledger, qualitative questions go to Memory, and hybrid questions can use both.
 
+## Multi-Agent Layer
+
+For complex questions, the project adds a CrewAI workflow with three specialist roles:
+
+- `Revenue Analyst`: extracts quantitative business evidence from the Ledger.
+- `Customer Voice Researcher`: searches Memory for qualitative customer signals.
+- `Executive Advisor`: combines both outputs into recommendations.
+
+This keeps each reasoning step easier to inspect than a single long agent trace.
+
+## Evaluation Layer
+
+The routing evaluation cases cover three question types:
+
+- SQL-only questions, which should use `run_ledger_query`.
+- Memory-only questions, which should use `search_customer_memory`.
+- Hybrid questions, which should use both tools.
+
+The fast tests validate the case matrix locally. The optional DeepEval runner can be used for LLM-assisted evaluation when API credentials are configured.
+
 ## Local Flow
 
 ```text
@@ -46,4 +66,4 @@ ShadowTraffic
                                            Qdrant
 ```
 
-The final application is a Chainlit chat interface backed by a LangChain/LangGraph agent.
+The interactive application is a Chainlit chat interface backed by a LangChain/LangGraph agent. The multi-agent workflow is designed for deeper report generation.

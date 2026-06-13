@@ -19,6 +19,8 @@ I built this as a portfolio version of a practical study project. The public rep
 - Embeds review comments with FastEmbed and indexes them in Qdrant.
 - Exposes two LangChain tools: one for SQL analytics and one for semantic review search.
 - Uses a ShopAgent to route questions to the right tool.
+- Adds a CrewAI workflow with separate revenue analysis, customer voice research, and executive synthesis roles.
+- Includes routing evaluation cases for SQL-only, semantic-only, and hybrid questions.
 - Provides a Chainlit chat interface for interactive exploration.
 
 ## Architecture
@@ -31,10 +33,10 @@ ShadowTraffic
     |    "The Ledger"               |
     |    exact metrics              |
     |                               v
-    +--> JSONL reviews --> Qdrant --> ShopAgent --> Chainlit
-                         "Memory"      |
-                         semantic      v
-                         search     answer in Portuguese
+    +--> JSONL reviews --> Qdrant --> ShopAgent / CrewAI --> Chainlit
+                         "Memory"          |
+                         semantic          v
+                         search       answers and reports
 ```
 
 ## Project Structure
@@ -51,11 +53,18 @@ src/
   analysis/                 Structured LLM analysis and SQL business queries
   retrieval/                Review ingestion and semantic search
   agent/                    LangChain tools and ShopAgent factory
+  crew/                     CrewAI multi-agent report workflow
+  evaluation/               Routing evaluation cases and DeepEval runner
+  demos/                    Architecture comparison scripts
   app/                      Chainlit interface
+
+frontend/
+  index.html                Static dashboard mockup
 
 docs/
   architecture.md           System design and data flow
   learning-notes.md         Personal implementation notes
+  multi-agent-design.md     Crew design and evaluation notes
 ```
 
 ## Setup
@@ -99,7 +108,16 @@ python src/analysis/ledger_queries.py
 python src/retrieval/ingest_reviews.py
 python src/retrieval/semantic_search.py
 python src/agent/shopagent.py
+python src/crew/ecommerce_intelligence_crew.py
+python src/demos/compare_single_agent_vs_crew.py
+python -m pytest tests
 chainlit run src/app/chainlit_app.py --port 8000
+```
+
+Run optional DeepEval routing checks:
+
+```bash
+python src/evaluation/deepeval_routing.py
 ```
 
 If Docker Compose creates a different Postgres container name, override it:
