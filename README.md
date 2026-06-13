@@ -1,5 +1,17 @@
 # Agentic Ecommerce Analytics
 
+![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![LangChain](https://img.shields.io/badge/LangChain-Agentic_AI-1C3C3C?style=for-the-badge)
+![LangGraph](https://img.shields.io/badge/LangGraph-Agent_State-0F172A?style=for-the-badge)
+![CrewAI](https://img.shields.io/badge/CrewAI-Multi_Agent-6D28D9?style=for-the-badge)
+![Docker](https://img.shields.io/badge/Docker-Local_Stack-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Qdrant](https://img.shields.io/badge/Qdrant-Vector_Search-DC244C?style=for-the-badge)
+![Postgres](https://img.shields.io/badge/Postgres-Ledger-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Chainlit](https://img.shields.io/badge/Chainlit-Chat_UI-111827?style=for-the-badge)
+![DeepEval](https://img.shields.io/badge/DeepEval-Agent_Evals-F97316?style=for-the-badge)
+
+[Read this README in Portuguese](README.pt-BR.md)
+
 An AI data engineering project that combines structured analytics, vector search, and an autonomous agent interface for ecommerce questions.
 
 ## Architecture
